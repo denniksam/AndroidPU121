@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AndroidPU121</string>
+
+    <string name="main_tv_title">Знайомство з Android</string>
+    <string name="main_btn_views">Елементи UI</string>
+
+    <string name="views_tv_title">Елементи UI (Views)</string>
+</resources>
