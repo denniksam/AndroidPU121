@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="calc_btn_func">
+        <item name="android:background">@drawable/calc_btn_func</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="backgroundTint">@null</item>
+    </style>
+</resources>

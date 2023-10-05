@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="calc_background">#202020</color>
+    <color name="calc_expression_text">#9B9B9B</color>
+    <color name="calc_result_text">#FEFEFE</color>
+    <color name="calc_btn_func_background">#323232</color>
+    <color name="calc_btn_digit_background">#3B3B3B</color>
+    <color name="calc_btn_equal_background">#4CC1FE</color>
 </resources>
