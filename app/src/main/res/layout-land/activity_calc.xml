@@ -8,90 +8,60 @@
     android:orientation="vertical"
     android:background="@color/calc_background"
     tools:context=".CalcActivity">
-
-    <TextView
-        android:id="@+id/calc_tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:textColor="@color/calc_result_text"
-        android:text="@string/calc_tv_title"/>
-    <TextView
-        android:id="@+id/calc_tv_expression"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="5dp"
-        android:textColor="@color/calc_expression_text"
-        android:textSize="18sp"
-        tools:text="99 x 6 ="/>
-    <TextView
-        android:id="@+id/calc_tv_result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="5dp"
-        android:textColor="@color/calc_result_text"
-        android:textSize="52sp"
-        android:textStyle="bold"
-        tools:text="594"/>
-
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/calc_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="@color/calc_result_text"
+                android:text="@string/calc_tv_title"/>
+            <TextView
+                android:id="@+id/calc_tv_expression"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/calc_expression_text"
+                android:textSize="18sp"
+                tools:text="99 x 6 ="/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/calc_tv_result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/calc_result_text"
+            android:textSize="52sp"
+            android:textStyle="bold"
+            tools:text="594"/>
+    </LinearLayout>
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:padding="2dp" >
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1" >
             <Button
                 android:id="@+id/calc_btn_percent"
                 android:text="@string/calc_btn_percent"
                 style="@style/calc_btn_func" />
-            <Button
-                android:id="@+id/calc_btn_ce"
-                android:text="@string/calc_btn_ce"
-                style="@style/calc_btn_func" />
-            <Button
-                android:id="@+id/calc_btn_c"
-                android:text="@string/calc_btn_c"
-                style="@style/calc_btn_func" />
-            <Button
-                android:id="@+id/calc_btn_backspace"
-                android:text="@string/calc_btn_backspace"
-                style="@style/calc_btn_func" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-            <Button
-                android:id="@+id/calc_btn_inverse"
-                android:text="@string/calc_btn_inverse"
-                style="@style/calc_btn_func" />
-            <Button
-                android:id="@+id/calc_btn_square"
-                android:text="@string/calc_btn_square"
-                style="@style/calc_btn_func" />
-            <Button
-                android:id="@+id/calc_btn_sqrt"
-                android:text="@string/calc_btn_sqrt"
-                style="@style/calc_btn_func" />
-            <Button
-                android:id="@+id/calc_btn_divide"
-                android:text="@string/calc_btn_divide"
-                style="@style/calc_btn_func" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
             <Button
                 android:id="@+id/calc_btn_7"
                 android:text="@string/calc_btn_7"
@@ -108,12 +78,20 @@
                 android:id="@+id/calc_btn_multiplication"
                 android:text="@string/calc_btn_multiplication"
                 style="@style/calc_btn_func" />
+            <Button
+                android:id="@+id/calc_btn_backspace"
+                android:text="@string/calc_btn_backspace"
+                style="@style/calc_btn_func" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
+            <Button
+                android:id="@+id/calc_btn_inverse"
+                android:text="@string/calc_btn_inverse"
+                style="@style/calc_btn_func" />
             <Button
                 android:id="@+id/calc_btn_4"
                 android:text="@string/calc_btn_4"
@@ -130,12 +108,20 @@
                 android:id="@+id/calc_btn_minus"
                 android:text="@string/calc_btn_minus"
                 style="@style/calc_btn_func" />
+            <Button
+                android:id="@+id/calc_btn_ce"
+                android:text="@string/calc_btn_ce"
+                style="@style/calc_btn_func" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
+            <Button
+                android:id="@+id/calc_btn_square"
+                android:text="@string/calc_btn_square"
+                style="@style/calc_btn_func" />
             <Button
                 android:id="@+id/calc_btn_1"
                 android:text="@string/calc_btn_1"
@@ -152,12 +138,20 @@
                 android:id="@+id/calc_btn_plus"
                 android:text="@string/calc_btn_plus"
                 style="@style/calc_btn_func" />
+            <Button
+                android:id="@+id/calc_btn_c"
+                android:text="@string/calc_btn_c"
+                style="@style/calc_btn_func" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
+            <Button
+                android:id="@+id/calc_btn_sqrt"
+                android:text="@string/calc_btn_sqrt"
+                style="@style/calc_btn_func" />
             <Button
                 android:id="@+id/calc_btn_plus_minus"
                 android:text="@string/calc_btn_plus_minus"
@@ -169,7 +163,10 @@
             <Button
                 android:id="@+id/calc_btn_comma"
                 android:text="@string/calc_btn_comma"
-                style="@style/calc_btn_digit" />
+                style="@style/calc_btn_digit" /><Button
+            android:id="@+id/calc_btn_divide"
+            android:text="@string/calc_btn_divide"
+            style="@style/calc_btn_func" />
             <Button
                 android:id="@+id/calc_btn_equal"
                 android:text="@string/calc_btn_equal"
