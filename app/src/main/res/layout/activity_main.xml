@@ -29,7 +29,7 @@
 
         <Button
             android:id="@+id/main_btn_views"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="@string/main_btn_views"
@@ -37,10 +37,18 @@
 
         <Button
             android:id="@+id/main_btn_calc"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:text="@string/main_btn_calc"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/main_btn_2048"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/main_btn_2048"
             android:textSize="20sp" />
     </LinearLayout>
 

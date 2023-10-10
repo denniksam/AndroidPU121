@@ -4,6 +4,10 @@
     <string name="main_tv_title">Знайомство з Android</string>
     <string name="main_btn_views">Елементи UI</string>
     <string name="main_btn_calc">Калькулятор</string>
+    <string name="main_btn_2048">2048</string>
+
+    <string name="game_tv_title">2048</string>
+    <string name="game_tv_hint">Поєднуйте числа щоб одержати 2048</string>
 
     <string name="views_tv_title">Елементи UI (Views)</string>
 
