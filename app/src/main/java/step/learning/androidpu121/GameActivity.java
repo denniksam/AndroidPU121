@@ -2,8 +2,13 @@ package step.learning.androidpu121;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +24,7 @@ public class GameActivity extends AppCompatActivity {
 
     private int score ;
     private TextView tvScore ;
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -38,7 +43,16 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        findViewById( R.id.game_table ).setOnTouchListener(
+        TableLayout tableLayout = findViewById( R.id.game_table ) ;
+        tableLayout.post( () -> {   // відкладений запуск (на кадр прорисовки)
+            int margin = 7 ;
+            int w = this.getWindow().getDecorView().getWidth() - 2 * margin;
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( w, w ) ;
+            layoutParams.setMargins( 7, 50, 7, 50 );
+            layoutParams.gravity = Gravity.CENTER ;
+            tableLayout.setLayoutParams( layoutParams ) ;
+        } ) ;
+        tableLayout.setOnTouchListener(
                 new OnSwipeListener( GameActivity.this ) {
                     @Override
                     public void onSwipeBottom() {
@@ -66,6 +80,13 @@ public class GameActivity extends AppCompatActivity {
         spawnCell() ;
         showField() ;
     }
+    /*
+    Д.З. Додати в метод showField() команди виведення
+    рахунку та максимального рахунку (задавати на старті
+    випадковим числом). Здійснювати перевірку: якщо
+    рахунок більший за максимальний, то оновлювати обидва
+    поля.
+     */
 
     /**
      * Поява нового числа на полі

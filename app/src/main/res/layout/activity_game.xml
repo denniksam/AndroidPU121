@@ -74,6 +74,11 @@
         android:text="@string/game_tv_hint"
         android:textAlignment="center"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
     <TableLayout
         android:id="@+id/game_table"
         android:layout_width="match_parent"
@@ -173,5 +178,5 @@
             tools:text="128" />
     </TableRow>
     </TableLayout>
-
+    </LinearLayout>
     </LinearLayout>
