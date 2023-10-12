@@ -7,6 +7,28 @@
     <color name="game_title_foreground">#FFFFFF</color>
     <color name="game_score_background">#3D3A33</color>
     <color name="game_score_foreground">#FFFFFF</color>
+    <color name="table_background">#A39280</color>
+    <color name="game_bg_0">#BEAFA0</color>
+    <color name="game_fg_0">#BEAFA0</color>
+    <color name="game_bg_2">#EEE4DA</color>
+    <color name="game_fg_2">#786E64</color>
+    <color name="game_bg_4">#EEE2CE</color>
+    <color name="game_fg_4">#786F65</color>
+    <color name="game_bg_8">#F3B27F</color>
+    <color name="game_fg_8">#F9F6F2</color>
+    <color name="game_bg_16">#F6976B</color>
+    <color name="game_fg_16">#F9F4ED</color>
+    <color name="game_bg_32">#E58266</color>
+    <color name="game_fg_32">#F9F6F1</color>
+    <color name="game_bg_64">#E36848</color>
+    <color name="game_fg_64">#F9F6F1</color>
+    <color name="game_bg_128">#E8D07F</color>
+    <color name="game_fg_128">#F8F6F3</color>
+    <color name="game_bg_256">#F0CF4B</color>
+    <color name="game_fg_256">#F8F6F3</color>
+    <color name="game_bg_512">#E3BF2A</color>
+    <color name="game_fg_512">#F8F6F3</color>
+
 
     <color name="calc_background">#202020</color>
     <color name="calc_expression_text">#9B9B9B</color>

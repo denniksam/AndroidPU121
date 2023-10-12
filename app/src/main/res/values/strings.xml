@@ -8,6 +8,17 @@
 
     <string name="game_tv_title">2048</string>
     <string name="game_tv_hint">Поєднуйте числа щоб одержати 2048</string>
+    <string name="tv_2">2</string>
+    <string name="tv_4">4</string>
+    <string name="tv_8">8</string>
+    <string name="tv_16">16</string>
+    <string name="tv_32">32</string>
+    <string name="tv_64">64</string>
+    <string name="tv_128">128</string>
+    <string name="tv_256">256</string>
+    <string name="tv_512">512</string>
+
+
 
     <string name="views_tv_title">Елементи UI (Views)</string>
 

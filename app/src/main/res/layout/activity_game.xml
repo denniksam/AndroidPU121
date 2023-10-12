@@ -74,4 +74,104 @@
         android:text="@string/game_tv_hint"
         android:textAlignment="center"/>
 
-</LinearLayout>
+    <TableLayout
+        android:id="@+id/game_table"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="70dp"
+        android:padding="6dp"
+        android:background="@color/table_background">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/game_cell_00"
+                style="@style/game_cell_0"
+                tools:text="0"/>
+            <TextView
+                android:id="@+id/game_cell_01"
+                style="@style/game_cell_2"
+                tools:text="2" />
+            <TextView
+                android:id="@+id/game_cell_02"
+                style="@style/game_cell_4"
+                tools:text="4" />
+            <TextView
+                android:id="@+id/game_cell_03"
+                style="@style/game_cell_8"
+                tools:text="8" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/game_cell_10"
+                style="@style/game_cell_16"
+                tools:text="16" />
+            <TextView
+                android:id="@+id/game_cell_11"
+                style="@style/game_cell_32"
+                tools:text="32"/>
+            <TextView
+                android:id="@+id/game_cell_12"
+                style="@style/game_cell_64"
+                tools:text="64" />
+            <TextView
+                android:id="@+id/game_cell_13"
+                style="@style/game_cell_128"
+                tools:text="128" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/game_cell_20"
+                style="@style/game_cell_256"
+                tools:text="256" />
+            <TextView
+                android:id="@+id/game_cell_21"
+                style="@style/game_cell_512"
+                tools:text="512"/>
+            <TextView
+                android:id="@+id/game_cell_22"
+                style="@style/game_cell_64"
+                tools:text="64" />
+            <TextView
+                android:id="@+id/game_cell_23"
+                style="@style/game_cell_128"
+                tools:text="128" />
+        </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/game_cell_30"
+            style="@style/game_cell_16"
+            tools:text="16" />
+        <TextView
+            android:id="@+id/game_cell_31"
+            style="@style/game_cell_32"
+            tools:text="32"/>
+        <TextView
+            android:id="@+id/game_cell_32"
+            style="@style/game_cell_64"
+            tools:text="64" />
+        <TextView
+            android:id="@+id/game_cell_33"
+            style="@style/game_cell_128"
+            tools:text="128" />
+    </TableRow>
+    </TableLayout>
+
+    </LinearLayout>
