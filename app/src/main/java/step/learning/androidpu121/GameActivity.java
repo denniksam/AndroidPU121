@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -24,11 +27,35 @@ public class GameActivity extends AppCompatActivity {
 
     private int score ;
     private TextView tvScore ;
+    private Animation spawnCellAnimation ;
+    private Animation collapseCellsAnimation ;
+    private MediaPlayer spawnSound ;
+/*
+Д.З. Реалізувати ходи вгору та вниз
+Додати елемент керування звуками (або вкл/викл, або гучність)
+ */
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_game );
+
+        spawnSound = MediaPlayer.create( GameActivity.this, R.raw.jump_00 ) ;
+
+        tvScore = findViewById( R.id.game_tv_score ) ;
+        // завантажуємо анімацію
+        spawnCellAnimation = AnimationUtils.loadAnimation(
+                GameActivity.this,
+                R.anim.game_spawn_cell
+        ) ;
+        // ініціалізуємо анімацію
+        spawnCellAnimation.reset() ;
+
+        collapseCellsAnimation = AnimationUtils.loadAnimation(
+                GameActivity.this,
+                R.anim.game_collapse_cells
+        ) ;
+        collapseCellsAnimation.reset();
 
         // Збираємо посилання на комірки ігрового поля
         for( int i = 0; i < N; i++ ) {
@@ -64,29 +91,36 @@ public class GameActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onSwipeLeft() {
-                        Toast.makeText( GameActivity.this, "onSwipeLeft", Toast.LENGTH_SHORT ).show();
+                        if( moveLeft() ) {
+                            spawnCell();
+                            showField();
+                        }
+                        else {
+                            Toast.makeText( GameActivity.this,
+                                    R.string.game_toast_no_move, Toast.LENGTH_SHORT ).show();
+                        }
                     }
                     @Override
                     public void onSwipeRight() {
-                        Toast.makeText( GameActivity.this, "onSwipeRight", Toast.LENGTH_SHORT ).show();
+                        if( moveRight() ) {
+                            spawnCell();
+                            showField();
+                        }
+                        else {
+                            Toast.makeText( GameActivity.this,
+                                    R.string.game_toast_no_move, Toast.LENGTH_SHORT ).show();
+                        }
                     }
                     @Override
                     public void onSwipeTop() {
                         Toast.makeText( GameActivity.this, "onSwipeTop", Toast.LENGTH_SHORT ).show();
                     }
                 } );
-
+        // cells[1][1] = 8;
         spawnCell() ;
         spawnCell() ;
         showField() ;
     }
-    /*
-    Д.З. Додати в метод showField() команди виведення
-    рахунку та максимального рахунку (задавати на старті
-    випадковим числом). Здійснювати перевірку: якщо
-    рахунок більший за максимальний, то оновлювати обидва
-    поля.
-     */
 
     /**
      * Поява нового числа на полі
@@ -120,6 +154,12 @@ public class GameActivity extends AppCompatActivity {
                 random.nextInt(10) == 0   // умова "один з 10"
                 ? 4    // цей блок з імовірністю 1 / 10
                 : 2 ;  // цей в інших випадках
+
+        // призначаємо анімацію появи для View даної комірки
+        tvCells[x][y].startAnimation( spawnCellAnimation ) ;
+        // програємо звук
+        spawnSound.start();
+
         return true ;
     }
 
@@ -159,5 +199,98 @@ public class GameActivity extends AppCompatActivity {
                 );
             }
         }
+
+        // Resource with placeholder (%d in resource for number)
+        tvScore.setText( getString( R.string.game_tv_score, score ) );
+    }
+
+    private boolean moveLeft() {
+        boolean result = false ;
+        // всі комірки (з числами)            [2024]   [2222]   [2022]
+        // переміщуємо ліворуч одна-до-одної  [2240]   [2222]   [2220]
+        // перевіряємо та колапсуємо          [4-40]   [4-4-]   [4-20]
+        // пересуваємо після колапсу          [4400]   [4400]   [4200]
+
+        // 1) пересування: оскільки невідомо відразу на скільки позицій буде пересування
+        // [0020] [2020] [0202] будемо повторювати переміщення доки ситуація не зміниться
+        boolean needRepeat ;
+        for( int i = 0; i < N; i++ ) {  // цикл по рядах
+            // проробляємо і-й ряд
+            do {
+                needRepeat = false;
+                for( int j = 0; j < N - 1; j++ ) {
+                    if( cells[ i ][ j ] == 0 && cells[ i ][ j + 1 ] != 0 ) {
+                        cells[ i ][ j ] = cells[ i ][ j + 1 ];
+                        cells[ i ][ j + 1 ] = 0;
+                        needRepeat = true;
+                        result = true;
+                    }
+                }
+            } while( needRepeat ) ;
+
+            // 2) collapse
+            for( int j = 0; j < N - 1; j++ ) {  // [2248]
+                if( cells[ i ][ j ] != 0 &&
+                        cells[ i ][ j ] == cells[ i ][ j + 1 ] ) {
+                    cells[ i ][ j ] *= 2 ;
+
+                    // призначаємо анімацію злиття для "збільшеної" комірки
+                    tvCells[ i ][ j ].startAnimation( collapseCellsAnimation ) ;
+
+                    score += cells[ i ][ j ] ;
+                    // [4248] пересунути на місце зколапсованої комірки всі правіші
+                    for( int k = j+1; k < N-1; k++ ) {
+                        cells[ i ][ k ] = cells[ i ][ k + 1 ] ;
+                    }
+                    // [4488] на місце самої правої ставимо 0
+                    cells[ i ][ N-1 ] = 0;  // [4480]
+                    result = true;
+                }
+            }
+        }
+        return result ;
+    }
+
+    private boolean moveRight() {
+        boolean result = false;
+        boolean needRepeat ;
+        for( int i = 0; i < N; i++ ) {  // цикл по рядах
+            do {
+                needRepeat = false;
+                for( int j = N-1; j > 0; j-- ) {
+                    if( cells[ i ][ j ] == 0 && cells[ i ][ j - 1 ] != 0 ) {
+                        cells[ i ][ j ] = cells[ i ][ j - 1 ];
+                        cells[ i ][ j - 1 ] = 0;
+                        needRepeat = true;
+                        result = true;
+                    }
+                }
+            } while( needRepeat ) ;
+
+            for( int j = N-1; j > 0; j-- ) {  // [8422]
+                if( cells[ i ][ j ] != 0 &&
+                        cells[ i ][ j ] == cells[ i ][ j - 1 ] ) {
+                    cells[ i ][ j ] *= 2 ;
+                    score += cells[ i ][ j ] ;
+                    // [8424] пересунути на місце зколапсованої комірки
+                    for( int k = j-1; k > 0; k-- ) {
+                        cells[ i ][ k ] = cells[ i ][ k - 1 ] ;
+                    }
+                    // [8844] на місце крайньої ставимо 0
+                    cells[ i ][ 0 ] = 0;  // [0844]
+                    result = true;
+                }
+            }
+        }
+        return result ;
     }
 }
+/*
+Анімації (double-anim) - плавні переходи числових параметрів
+між початковим та кінцевим значеннями. Закладаються декларативно (у xml)
+та проробляються ОС.
+Створюємо ресурсну папку (anim, назва важлива)
+у ній - game_spawn_cell.xml (див. коментарі у ньому)
+Завантажуємо анімацію (onCreate)  та ініціалізуємо її
+Призначаємо (викликаємо) анімацію при появі комірки (див. spawnCell)
+ */

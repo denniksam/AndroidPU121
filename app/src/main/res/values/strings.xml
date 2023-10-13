@@ -17,6 +17,8 @@
     <string name="tv_128">128</string>
     <string name="tv_256">256</string>
     <string name="tv_512">512</string>
+    <string name="game_toast_no_move">Немає руху</string>
+    <string name="game_tv_score">РАХУНОК\n%d</string>
 
 
 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alpha
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromAlpha="0"
+    android:toAlpha="1"
+    android:duration="300" />
+
+<!-- Анімація прозорості (альфа-каналу)
+Для задачі плавної появи нової комірки - анімація від повної прозорості (0)
+до непрозорості (1) протягом часу duration (у мілісекундах)
+-->
