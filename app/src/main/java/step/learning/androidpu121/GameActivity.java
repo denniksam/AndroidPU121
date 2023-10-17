@@ -1,8 +1,10 @@
 package step.learning.androidpu121;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,10 +33,8 @@ public class GameActivity extends AppCompatActivity {
     private Animation spawnCellAnimation ;
     private Animation collapseCellsAnimation ;
     private MediaPlayer spawnSound ;
-/*
-Д.З. Реалізувати ходи вгору та вниз
-Додати елемент керування звуками (або вкл/викл, або гучність)
- */
+    private static final String bestScoreFilename = "best_score" ;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -41,7 +42,6 @@ public class GameActivity extends AppCompatActivity {
         setContentView( R.layout.activity_game );
 
         spawnSound = MediaPlayer.create( GameActivity.this, R.raw.jump_00 ) ;
-
         tvScore = findViewById( R.id.game_tv_score ) ;
         // завантажуємо анімацію
         spawnCellAnimation = AnimationUtils.loadAnimation(
@@ -83,39 +83,38 @@ public class GameActivity extends AppCompatActivity {
                 new OnSwipeListener( GameActivity.this ) {
                     @Override
                     public void onSwipeBottom() {
-                        Toast.makeText(   // повідомлення, що з'являється та зникає з часом
-                                GameActivity.this,
-                                "onSwipeBottom",
-                                Toast.LENGTH_SHORT   // час відображення повідомлення
-                        ).show();
+                        processMove( MoveDirection.BOTTOM );
                     }
                     @Override
                     public void onSwipeLeft() {
-                        if( moveLeft() ) {
-                            spawnCell();
-                            showField();
-                        }
-                        else {
-                            Toast.makeText( GameActivity.this,
-                                    R.string.game_toast_no_move, Toast.LENGTH_SHORT ).show();
-                        }
+                        processMove( MoveDirection.LEFT );
                     }
                     @Override
                     public void onSwipeRight() {
-                        if( moveRight() ) {
-                            spawnCell();
-                            showField();
-                        }
-                        else {
-                            Toast.makeText( GameActivity.this,
-                                    R.string.game_toast_no_move, Toast.LENGTH_SHORT ).show();
-                        }
+                       processMove( MoveDirection.RIGHT );
                     }
                     @Override
                     public void onSwipeTop() {
-                        Toast.makeText( GameActivity.this, "onSwipeTop", Toast.LENGTH_SHORT ).show();
+                        processMove( MoveDirection.TOP );
                     }
                 } );
+
+        startNewGame() ;
+    }
+
+    private void saveBestScore() {
+
+    }
+    private void loadBestScore() {
+
+    }
+    private void startNewGame() {
+        for( int i = 0; i < N; i++ ) {
+            for( int j = 0; j < N; j++ ) {
+                cells[i][j] = 0 ;
+            }
+        }
+        score = 0 ;
         // cells[1][1] = 8;
         spawnCell() ;
         spawnCell() ;
@@ -158,7 +157,7 @@ public class GameActivity extends AppCompatActivity {
         // призначаємо анімацію появи для View даної комірки
         tvCells[x][y].startAnimation( spawnCellAnimation ) ;
         // програємо звук
-        spawnSound.start();
+        // spawnSound.start();
 
         return true ;
     }
@@ -202,6 +201,49 @@ public class GameActivity extends AppCompatActivity {
 
         // Resource with placeholder (%d in resource for number)
         tvScore.setText( getString( R.string.game_tv_score, score ) );
+    }
+
+    private void processMove( MoveDirection direction ) {
+        if( move( direction ) ) {
+            spawnCell();
+            showField();
+            if( ! isGameFail() ) {  // немає більше ходів
+                showFailDialog() ;
+            }
+        }
+        else {
+            Toast.makeText( GameActivity.this,
+                    R.string.game_toast_no_move, Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    private void showFailDialog() {
+        new AlertDialog.Builder( this, androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert )
+                .setIcon( android.R.drawable.ic_dialog_alert )
+                .setTitle( R.string.game_over )
+                .setMessage( R.string.game_over_dialog )
+                .setCancelable( false )
+                .setPositiveButton( R.string.game_over_yes,
+                        ( DialogInterface dialog, int whichButton ) -> startNewGame()
+                )
+                .setNegativeButton( R.string.game_over_no,
+                        ( DialogInterface dialog, int whichButton ) -> finish()   // закрити активність
+                )
+                .setNeutralButton( R.string.game_over_undo,
+                        ( DialogInterface dialog, int whichButton ) ->
+                                dialog.dismiss()
+                )
+                .show();
+    }
+
+    private boolean move( MoveDirection direction ) {
+        switch( direction ) {
+            case BOTTOM: return moveBottom() ;
+            case LEFT: return moveLeft() ;
+            case RIGHT: return moveRight() ;
+            case TOP: return moveTop() ;
+        }
+        return false ;
     }
 
     private boolean moveLeft() {
@@ -284,6 +326,101 @@ public class GameActivity extends AppCompatActivity {
         }
         return result ;
     }
+
+    private boolean moveTop() {
+        boolean result = false;
+        boolean needRepeat;
+        for( int j = 0; j < N; j++ ) {
+            do {
+                needRepeat = false;
+                for( int i = 0; i < N - 1; i++ ) {
+                    if( cells[ i ][ j ] == 0 && cells[ i + 1 ][ j ] != 0 ) {
+                        cells[ i ][ j ] = cells[ i + 1 ][ j ];
+                        cells[ i + 1 ][ j ] = 0;
+                        needRepeat = true;
+                        result = true;
+                    }
+                }
+            } while( needRepeat );
+            for( int i = 0; i < N - 1; i++ ) {
+                if( cells[ i ][ j ] != 0 && cells[ i ][ j ] == cells[ i + 1 ][ j ] ) {
+                    cells[ i ][ j ] *= 2;
+                    //Animation
+                    tvCells[ i ][ j ].startAnimation( collapseCellsAnimation );
+                    score += cells[ i ][ j ];
+                    for( int k = j + 1; k < N - 1; k++ ) {
+                        cells[ k ][ j ] = cells[ k + 1 ][ j ];
+                    }
+                    cells[ N - 1 ][ j ] = 0;
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean moveBottom() {
+        boolean result = false;
+        boolean needRepeat;
+        for( int j = 0; j < N; j++ ) {
+            do {
+                needRepeat = false;
+                for( int i = N - 1; i > 0; i-- ) {
+                    if( cells[ i ][ j ] == 0 && cells[ i - 1 ][ j ] != 0 ) {
+                        cells[ i ][ j ] = cells[ i - 1 ][ j ];
+                        cells[ i - 1 ][ j ] = 0;
+                        needRepeat = true;
+                        result = true;
+                    }
+                }
+            } while( needRepeat );
+            for( int i = N - 1; i > 0; i-- ) {
+                if( cells[ i ][ j ] != 0 && cells[ i ][ j ] == cells[ i - 1 ][ j ] ) {
+                    cells[ i ][ j ] *= 2;
+                    tvCells[ i ][ j ].startAnimation( collapseCellsAnimation );
+                    score += cells[ i ][ j ];
+                    for( int k = i - 1; k > 0; k-- ) {
+                        cells[ k ][ j ] = cells[ k - 1 ][ j ];
+                    }
+                    cells[ 0 ][ j ] = 0;
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean isGameFail() {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (cells[i][j] == 0) {
+                    return false ;
+                }
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N-1; j++) {
+                if (cells[i][j] == cells[i][j + 1]) {
+                    return false ;
+                }
+            }
+        }
+        for (int i = 0; i < N-1; i++) {
+            for (int j = 0; j < N; j++)  {
+                if (cells[i][j] == cells[i + 1][j]) {
+                    return false ;
+                }
+            }
+        }
+        return true ;
+    }
+
+    private enum MoveDirection {
+        BOTTOM,
+        LEFT,
+        RIGHT,
+        TOP
+    }
 }
 /*
 Анімації (double-anim) - плавні переходи числових параметрів
@@ -293,4 +430,27 @@ public class GameActivity extends AppCompatActivity {
 у ній - game_spawn_cell.xml (див. коментарі у ньому)
 Завантажуємо анімацію (onCreate)  та ініціалізуємо її
 Призначаємо (викликаємо) анімацію при появі комірки (див. spawnCell)
+ */
+/*
+Car{
+    @WHERE(" IS NOT NULL ")
+    cond,
+    @WHERE(" = 'robot' " )
+    automat,
+    ... }
+Request{ cond=true, }
+sql = SELECT * FROM cars WHERE is_sold = true
+
+        for( Field field : Car.class.getDeclaredFields() ) {
+            String par = field.getName() // cond, automat,
+        for( par : {"cond", "automat"})
+            if( req.getParameter(par) != null ) {
+              sql += " AND " + par + field.getAnnotation( WHERE.class )
+            }
+        }
+        if( req.getParameter("min-price") != null ) {
+              sql += " AND price >= " + req.getParameter("min-price")
+            }
+
+        SELECT * FROM cars WHERE is_sold = true AND cond IS NOT NULL AND automat IS NOT NULL
  */

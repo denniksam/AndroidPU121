@@ -19,6 +19,13 @@
     <string name="tv_512">512</string>
     <string name="game_toast_no_move">Немає руху</string>
     <string name="game_tv_score">РАХУНОК\n%d</string>
+    <string name="game_tv_best">РЕКОРД\n%d</string>
+    <string name="game_over">Немає ходу</string>
+    <string name="game_over_dialog">Гра провалена.\nПочати нову?</string>
+    <string name="game_over_yes">Так</string>
+    <string name="game_over_undo">Хід назад</string>
+    <string name="game_over_no">Ні</string>
+
 
 
 
