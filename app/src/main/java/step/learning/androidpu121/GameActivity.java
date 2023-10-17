@@ -4,11 +4,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,19 +20,30 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
     private static final int N = 4;
     private final int[][] cells = new int[N][N] ;
+    private final int[][] prevCells = new int[N][N] ;  // for UNDO action
+    private final int[][] tmpCells = new int[N][N] ;  // for UNDO action
     private final TextView[][] tvCells = new TextView[N][N] ;
     private final Random random = new Random() ;
 
     private int score ;
+    private int bestScore ;
     private TextView tvScore ;
+    private TextView tvBestScore ;
     private Animation spawnCellAnimation ;
     private Animation collapseCellsAnimation ;
     private MediaPlayer spawnSound ;
@@ -43,6 +57,8 @@ public class GameActivity extends AppCompatActivity {
 
         spawnSound = MediaPlayer.create( GameActivity.this, R.raw.jump_00 ) ;
         tvScore = findViewById( R.id.game_tv_score ) ;
+        tvBestScore = findViewById( R.id.game_tv_best_score ) ;
+
         // завантажуємо анімацію
         spawnCellAnimation = AnimationUtils.loadAnimation(
                 GameActivity.this,
@@ -99,14 +115,51 @@ public class GameActivity extends AppCompatActivity {
                     }
                 } );
 
+        findViewById( R.id.game_btn_new_game ).setOnClickListener( this::newGameClick );
+        findViewById( R.id.game_btn_undo ).setOnClickListener( this::undoMoveClick );
+
+        loadBestScore();
         startNewGame() ;
     }
-
+    private void newGameClick( View view ) {
+        // TODO: вивести повідомлення-підтвердження
+        startNewGame();
+    }
+    private void undoMoveClick( View view ) {
+        for( int i = 0; i < N; i++ ) {
+            System.arraycopy( prevCells[ i ], 0, cells[ i ], 0, N );
+        }
+        showField();
+    }
     private void saveBestScore() {
-
+        /* Android має розподілену файлову систему. У застосунку є вільний
+        * доступ до приватних файлів, які є частиною роботи та автоматично
+        * видаляються разом з застосунком. Є спільні ресурси (картинки, завантаження
+        * тощо) доступ до яких зазначається у маніфесті та має погоджуватись
+        * дозволом користувача. Інші файли можуть виявитись недоступними. */
+        try( FileOutputStream outputStream =
+                     openFileOutput( bestScoreFilename, Context.MODE_PRIVATE ) ;
+             DataOutputStream writer = new DataOutputStream( outputStream )
+        ) {
+            writer.writeInt( bestScore ) ;
+            writer.flush() ;
+            Log.d( "saveBestScore", "save OK" ) ;
+        }
+        catch( IOException ex ) {
+            Log.e( "saveBestScore", Objects.requireNonNull( ex.getMessage() ) ) ;
+        }
     }
     private void loadBestScore() {
-
+        try( FileInputStream inputStream = openFileInput( bestScoreFilename ) ;
+             DataInputStream reader = new DataInputStream( inputStream )
+        ) {
+            bestScore = reader.readInt() ;
+            Log.d( "loadBestScore", "Best score read: " + bestScore ) ;
+        }
+        catch( IOException ex ) {
+            bestScore = 0 ;
+            Log.e( "loadBestScore", Objects.requireNonNull( ex.getMessage() ) ) ;
+        }
     }
     private void startNewGame() {
         for( int i = 0; i < N; i++ ) {
@@ -115,6 +168,8 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         score = 0 ;
+        loadBestScore();
+        tvBestScore.setText( getString( R.string.game_tv_best, bestScore ) );
         // cells[1][1] = 8;
         spawnCell() ;
         spawnCell() ;
@@ -204,11 +259,24 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void processMove( MoveDirection direction ) {
+        for( int i = 0; i < N; i++ ) {
+            System.arraycopy( cells[ i ], 0, tmpCells[ i ], 0, N );
+        }
         if( move( direction ) ) {
+            for( int i = 0; i < N; i++ ) {
+                System.arraycopy( tmpCells[ i ], 0, prevCells[ i ], 0, N );
+            }
             spawnCell();
             showField();
-            if( ! isGameFail() ) {  // немає більше ходів
+            if( isGameFail() ) {  // немає більше ходів
                 showFailDialog() ;
+            }
+            else {
+                if( score > bestScore ) {
+                    bestScore = score ;
+                    saveBestScore() ;
+                    tvBestScore.setText( getString( R.string.game_tv_best, bestScore ) ) ;
+                }
             }
         }
         else {
@@ -422,6 +490,16 @@ public class GameActivity extends AppCompatActivity {
         TOP
     }
 }
+/*
+Д.З. Завершити роботу з проєктом "2048"
+- Видавати повідомлення при натисканні кнопки "нова гра"
+- Забезпечити при повернені руху (undo) також повернення рахунку та рекорду (якщо треба)
+- Заблокувати роботу кнопки (undo) відразу після старту нової гри
+- Реалізувати перевірку позитивного завершення гри (набір 2048 хоча у на одній комірці)
+   передбачити можливість продовження гри (повторні повідомлення не видавати)
+- Заблокувати повороти активності або реалізувати дизайн у ландшафтній орієнтації
+** Повертання ходів далі ніж на один
+ */
 /*
 Анімації (double-anim) - плавні переходи числових параметрів
 між початковим та кінцевим значеннями. Закладаються декларативно (у xml)

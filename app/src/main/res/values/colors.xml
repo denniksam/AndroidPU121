@@ -7,6 +7,8 @@
     <color name="game_title_foreground">#FFFFFF</color>
     <color name="game_score_background">#3D3A33</color>
     <color name="game_score_foreground">#FFFFFF</color>
+    <color name="game_btn_background">#FFF65E3E</color>
+    <color name="game_btn_foreground">#FFFFFF</color>
     <color name="table_background">#A39280</color>
     <color name="game_bg_0">#BEAFA0</color>
     <color name="game_fg_0">#BEAFA0</color>
