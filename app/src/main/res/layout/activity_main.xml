@@ -50,6 +50,22 @@
             android:layout_margin="10dp"
             android:text="@string/main_btn_2048"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/main_btn_rates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/main_btn_rates"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/main_btn_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/main_btn_chat"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

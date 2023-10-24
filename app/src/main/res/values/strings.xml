@@ -1,11 +1,21 @@
 <resources>
     <string name="app_name">AndroidPU121</string>
 
+    <!-- region Home -->
     <string name="main_tv_title">Знайомство з Android</string>
     <string name="main_btn_views">Елементи UI</string>
     <string name="main_btn_calc">Калькулятор</string>
     <string name="main_btn_2048">2048</string>
+    <string name="main_btn_rates">Курси валют</string>
+    <string name="main_btn_chat">Чат</string>
+    <!-- endregion -->
 
+    <!-- region Rates -->
+    <string name="rates_ex_thread">Відкриття з\'єднання з UI (основного) потоку</string>
+    <string name="rates_btn_by_alpha">За назвою</string>
+    <!-- endregion -->
+
+    <!-- region 2048 -->
     <string name="game_tv_title">2048</string>
     <string name="game_tv_hint">Поєднуйте числа щоб одержати 2048</string>
     <string name="tv_2">2</string>
@@ -25,9 +35,7 @@
     <string name="game_over_yes">Так</string>
     <string name="game_over_undo">Хід назад</string>
     <string name="game_over_no">Ні</string>
-
-
-
+    <!-- endregion -->
 
     <string name="views_tv_title">Елементи UI (Views)</string>
 
