@@ -3,6 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="chat_my_bg">#97EDE0</color>
+    <color name="chat_other_bg">#EDE497</color>
+
     <color name="rate_bg_1">#97EDE0</color>
     <color name="rate_bg_2">#EDE497</color>
 

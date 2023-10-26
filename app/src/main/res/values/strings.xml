@@ -10,6 +10,11 @@
     <string name="main_btn_chat">Чат</string>
     <!-- endregion -->
 
+    <string name="chat_btn_send">Чат</string>
+    <string name="chat_tv_nik">Нік у чаті:</string>
+    <string name="chat_et_nik">DNS</string>
+
+
     <!-- region Rates -->
     <string name="rates_ex_thread">Відкриття з\'єднання з UI (основного) потоку</string>
     <string name="rates_btn_by_alpha">За назвою</string>
