@@ -1,5 +1,7 @@
 package step.learning.androidpu121.orm;
 
+import android.view.View;
+
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
@@ -12,6 +14,8 @@ public class ChatMessage {
     private String author;
     private String text;
     private String moment;
+
+    transient private View view ;  // посилання на "представлення" данного повідомлення
 
     private final static SimpleDateFormat sqlDateFormat =
             new SimpleDateFormat( "yyyy-MM-dd hh:mm:ss", Locale.UK ) ;
@@ -38,6 +42,14 @@ public class ChatMessage {
         }
         catch( Exception ignored ) { }
         return chatMessage ;
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView( View view ) {
+        this.view = view;
     }
 
     public String getId() {
